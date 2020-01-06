@@ -1,6 +1,5 @@
 pragma solidity ^0.5.0;
 
-import "./AbstractTransaction.sol";
 import "./AbstractWallet.sol";
 import "./AbstractDataSell.sol";
 import "./AbstractDataUpload.sol";
@@ -11,7 +10,8 @@ contract DataSell is AbstractDataSell {
 	struct SelledData {
 		string fileId;
 		address dataValidator;
-		address owner;
+		address dataMart;
+		address dataOwner;
 		uint256 sum;
 	}
 
@@ -24,13 +24,13 @@ contract DataSell is AbstractDataSell {
 
 	AbstractWallet public wallet;
 	AbstractDataUpload public dataUpload;
-	AbstractTransaction public transaction;
 	AbstractAccountManage public accountManage;
 
 	event SelledDataEvent(
 		string fileId, 
 		address dataValidator, 
-		address owner, 
+		address dataMart, 
+		address dataOwner, 
 		uint256 sum
 	);
 
@@ -38,32 +38,37 @@ contract DataSell is AbstractDataSell {
 		address dataValidator
 	);
 	
-	constructor(address _transaction, address _wallet, address _dataUpload, address _accountManage) public {
+	constructor(address _wallet, address _dataUpload, address _accountManage) public {
 		wallet = AbstractWallet(_wallet);
 		dataUpload = AbstractDataUpload(_dataUpload);
-		transaction = AbstractTransaction(_transaction);
 		accountManage = AbstractAccountManage(_accountManage);
 	}
 
 	function sell (
 		string memory _fileId, 
-		address _owner,
+		address _dataMart,
 		address _dataValidator, 
+		address _serviceNode, 
+		address _dataOwner,
 		uint256 _sum
 	) public sumMoreZero(_sum) {
-		require(dataUpload.checkFileExist(_owner, _fileId));
-		require(accountManage.isDataMart(_owner));
+		require(dataUpload.checkFileExist(_dataValidator, _fileId));
+		require(accountManage.isDataMart(_dataMart));
 		require(accountManage.isDataValidator(_dataValidator));
-		selledData[_fileId] = SelledData(_fileId, _dataValidator, _owner, _sum);
-		transaction.newTransaction(_fileId, 'dataSell');
-		wallet.balanceReplenishment(_dataValidator, _sum);
-		wallet.balanceConsumption(_owner, _sum);
-		emit SelledDataEvent(_fileId, _dataValidator, _owner, _sum);
+		require(accountManage.isServiceNode(_serviceNode));
+
+		uint256 _amount = _sum / 2;
+
+		selledData[_fileId] = SelledData(_fileId, _dataValidator, _dataMart, _dataOwner, _sum);
+		wallet.balanceReplenishment(_dataValidator, _amount);
+		wallet.balanceReplenishment(_dataOwner, _amount);
+		wallet.balanceConsumption(_dataMart, _sum);
+		emit SelledDataEvent(_fileId, _dataValidator, _dataMart, _dataOwner, _sum);
 	}
 
 	function getSellData(string memory _fileId) view public returns (string memory, address, address, uint256) {
 		SelledData memory _item = selledData[_fileId];
-		return (_item.fileId, _item.dataValidator, _item.owner, _item.sum);
+		return (_item.fileId, _item.dataValidator, _item.dataMart, _item.sum);
 	}
 }
 

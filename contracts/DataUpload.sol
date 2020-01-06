@@ -11,6 +11,9 @@ contract DataUpload is AbstractDataUpload {
 	mapping (address => mapping(string => File)) public files;
 	mapping (string => UploadedData) public uploadedData;
 	mapping (uint256 => File) public fileList;
+
+	mapping (address => uint256) public fileUploadedCount;
+	mapping (address => mapping(uint256 => File)) public fileUploaded; 
 	
 
 	AbstractTransaction public transaction;
@@ -23,27 +26,23 @@ contract DataUpload is AbstractDataUpload {
 		uint256 size;
 		string file_extension;
 		string mime_type;
+		string meta_data;
 		address owner;
 		bool exist;
 	}
 
 	struct UploadedData {
 		string  id;
-		address serviceNodeAddress;
-		address dataOwnerAddress;
-		uint256 serviceNodeAmount;
-		uint256 dataOwnerAmount; 
-		uint256 assessedValue;
 		uint256 sum;
+		uint256 buySum;
+		address serviceNodeAddress;
+		address dataOwner;
 	}
 
 	event DataUploaded(
 		string id,
 		address serviceNodeAddress,
 		address dataOwner,
-		uint serviceNodeAmount,
-		uint dataOwnerAmount,
-		uint assessedValue,
 		uint sum
 	);
 
@@ -59,32 +58,28 @@ contract DataUpload is AbstractDataUpload {
 		uint256 _size,
 		string memory _file_extension,
 		string memory _mime_type,
+		string memory _meta_data,
 		address _owner,
 		address _serviceNodeAddress,
 		address _dataOwner,
-		uint _dataPrice,
+		uint _buySum,
 		uint _sum
 	) public {
 		require (_sum > 0, "Sum less zero");
-		require (_sum == _dataPrice, "Data price and sum not equal");
+		require (_buySum > 0, "Sum less zero");
 		require (accountManage.isDataOwner(_dataOwner) == true, "Invalid address: Is not Data Owner");
 		require (accountManage.isServiceNode(_serviceNodeAddress) == true, "Invalid address: Is not Service Node");
 		require (accountManage.isDataValidator(_owner) == true, "Invalid address: Is not Data Validator");
 		
 		fileCount += 1;
-		uint256 _dataOwnerAmount = _sum / 2;
-		uint256 _serviceNodeAmount = _sum / 2;
-		wallet.balanceReplenishment(_serviceNodeAddress, _dataOwnerAmount);
-		wallet.balanceReplenishment(_dataOwner, _serviceNodeAmount);
+		wallet.balanceReplenishment(_serviceNodeAddress, _sum);
 		wallet.balanceConsumption(_owner, _sum);
 		uploadedData[_id] = UploadedData(
 			_id, 
+			_sum,
+			_buySum,
 			_serviceNodeAddress, 
-			_dataOwner, 
-			_dataOwnerAmount, 
-			_serviceNodeAmount, 
-			_dataPrice, 
-			_sum
+			_dataOwner
 		);
 		File memory _file = File(
 			_id, 
@@ -92,19 +87,20 @@ contract DataUpload is AbstractDataUpload {
 			_size, 
 			_file_extension, 
 			_mime_type,
+			_meta_data,
 			_owner,
 			true
 		);
 		fileList[fileCount] = _file;
 		files[_owner][_id] = _file;
-		transaction.newTransaction(_id, 'dataUpload');
+
+		fileUploadedCount[_owner] += 1;
+		fileUploaded[_owner][fileUploadedCount[_owner]] = _file;
+
 		emit DataUploaded(
 			_id, 
 			_serviceNodeAddress, 
 			_dataOwner, 
-			_dataOwnerAmount, 
-			_serviceNodeAmount, 
-			_dataPrice, 
 			_sum
 		);
 	}

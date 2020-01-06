@@ -22,7 +22,7 @@ module.exports = function(deployer, network, addresses) {
 			return deployer.deploy(DataUpload, Transaction.address, Wallet.address, AccountManage.address)
 		})
 		.then(() => {
-			return deployer.deploy(DataSell, Transaction.address, Wallet.address, DataUpload.address, AccountManage.address)
+			return deployer.deploy(DataSell, Wallet.address, DataUpload.address, AccountManage.address)
 		})
 		.then(() => {
 			a.setWhiteList(DataSell.address, DataUpload.address, AccountManage.address)

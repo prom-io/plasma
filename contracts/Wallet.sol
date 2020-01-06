@@ -33,6 +33,12 @@ contract Wallet is AbstractWallet {
 		uint256 currentSum, 
 		uint256 replenishmentSum
 	);
+
+	event ExtendFileStore(
+		address dataValidator,
+		address serviceNode,
+		uint256 sum
+	);
 	
 	modifier checkSum(uint256 _sum) { 
 		require (_sum > 0); 
@@ -67,6 +73,18 @@ contract Wallet is AbstractWallet {
 		_wallet.exists = true;
 		wallets[_owner] = _wallet;
 		emit BalanceEvent(_owner, _wallet.balance, _sum);
+	}
+
+	function extendFileStore(address _dataValidator, address _serviceNode, uint256 _sum) public checkSum(_sum) {
+		Balance memory _dataValidatorBalance = wallets[_dataValidator];
+		Balance memory _serviceNodeBalance = wallets[_serviceNode];
+		require(_dataValidatorBalance.balance > 0, 'Funds in the account are over!');
+		require(_dataValidatorBalance.balance >= _sum, 'Data validator not enough funds on the balance sheet');
+		_dataValidatorBalance.balance -= _sum;
+		_serviceNodeBalance.balance += _sum;
+		wallets[_dataValidator] = _dataValidatorBalance;
+		wallets[_serviceNode] = _serviceNodeBalance;
+		emit ExtendFileStore(_dataValidator, _serviceNode, _sum);
 	}
 
 	function setWhiteList(
