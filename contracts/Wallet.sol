@@ -5,6 +5,7 @@ import "./AbstractWallet.sol";
 contract Wallet is AbstractWallet {
 
 	address owner;
+
 	mapping (address => bool) public isWhiteListed;
 
 	constructor() public {
@@ -37,6 +38,12 @@ contract Wallet is AbstractWallet {
 	event ExtendFileStore(
 		address dataValidator,
 		address serviceNode,
+		uint256 sum
+	);
+
+	event TransferTo(
+		address from,
+		address to,
 		uint256 sum
 	);
 	
@@ -87,6 +94,20 @@ contract Wallet is AbstractWallet {
 		emit ExtendFileStore(_dataValidator, _serviceNode, _sum);
 	}
 
+	function transferTo(address _from, address _to, uint256 _sum) public checkSum(_sum) {
+		require(checkExists(_to), 'Reciever address is not registered');
+		require(checkExists(_from), 'Address is not registered');
+		Balance memory _fromBalance = wallets[_from];
+		Balance memory _toBalance = wallets[_to];
+		require(_fromBalance.balance > 0, 'Funds in the account are over!');
+		require(_fromBalance.balance >= _sum, 'Not enough funds on the balance sheet');
+		_fromBalance.balance -= _sum;
+		_toBalance.balance += _sum;
+		wallets[_from] = _fromBalance;
+		wallets[_to] = _toBalance;
+		emit TransferTo(_from, _to, _sum);
+	}
+
 	function setWhiteList(
 		address _dataSell, 
 		address _dataUpload,
@@ -105,5 +126,4 @@ contract Wallet is AbstractWallet {
 	function balanceOf(address _owner) public view returns (uint256) {
 		return wallets[_owner].balance;
 	}
-	
 }

@@ -1,7 +1,6 @@
 {
-  "name": "test-net",
+  "name": "plasma",
   "version": "1.0.0",
-  "description": "",
   "main": "truffle-config.js",
   "directories": {
     "test": "test"
@@ -13,7 +12,16 @@
   "license": "ISC",
   "dependencies": {
     "net": "^1.0.2",
-    "web3": "^1.2.1",
+    "web3": "^1.2.4",
     "web3-providers-ipc": "^1.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Prometeus-Network/plasma.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Prometeus-Network/plasma/issues"
+  },
+  "homepage": "https://github.com/Prometeus-Network/plasma#readme",
+  "description": ""
 }
