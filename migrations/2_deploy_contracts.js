@@ -12,7 +12,7 @@ const AccountManage = artifacts.require("AccountManage");
 module.exports = function(deployer, network, addresses) {
 	const config = TruffleConfig.networks[network];
 	var a
-	deployer.deploy(Transaction, {overwrite: false});
+	deployer.deploy(Transaction, {overwrite: true});
 	deployer.deploy(Wallet)
 		.then((instance) => {
 			a = instance

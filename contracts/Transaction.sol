@@ -8,6 +8,7 @@ contract Transaction is AbstractTransaction {
 	uint256 public queueNumber = 0;
 	uint256 public dataUploadTxCount = 0;
 	uint256 public dataPurchaseTxCount = 0;
+	uint256 public transferTxCount = 0;
 	mapping (address => mapping(uint256 => Tx)) public addressTx;
 	mapping (address => uint256) public addressTxCount;
 	mapping (uint256 => Tx) public transactions;
@@ -62,13 +63,13 @@ contract Transaction is AbstractTransaction {
 		uint created_at
 	);
 
-	event TxEvent(
-		string fileUuid,
-		string txType,
+	event TxTransfer(
+		string hash,
+		uint256 queueNumber,
 		address serviceNode,
-		address from,
-		address to,
-		uint256 value
+		address dataValidator,
+		uint256 value,
+		uint created_at
 	);
 
 
@@ -109,7 +110,6 @@ contract Transaction is AbstractTransaction {
 		addressTx[_serviceNode][addressTxCount[_serviceNode]] = _tx;
 		addressTx[_dataValidator][addressTxCount[_dataValidator]] = _tx;
 		addressTx[_dataOwner][addressTxCount[_dataOwner]] = _tx;
-
 
 
 		emit TxDataUpload(
@@ -173,6 +173,50 @@ contract Transaction is AbstractTransaction {
 			_dataValidator,
 			_dataMart,
 			_dataOwner,
+			_value,
+			now
+		);
+	}
+
+	function transactionTransfer(
+		string memory _hash,
+		address _serviceNode,
+		address _dataValidator,
+		uint256 _value
+	) public {
+		queueNumber += 1;
+		dataUploadTxCount += 1;
+
+		TxPayData memory _txPayData = TxPayData(_value, 0, 0, 0, 0, _value, 0, 0);
+
+		Tx memory _tx = Tx(
+			'',
+			'transfer',
+			_hash,
+			queueNumber,
+			_serviceNode,
+			_dataValidator,
+			address(0),
+			address(0),
+			_value,
+			now
+		);
+		transactions[queueNumber] = _tx;
+		transactionByHash[_hash] = _tx;
+		transactionPayDataByHash[_hash] = _txPayData;
+		transactionsByType['transfer'][dataUploadTxCount] = _tx;
+
+		addressTxCount[_serviceNode] += 1;
+		addressTxCount[_dataValidator] += 1;
+
+		addressTx[_serviceNode][addressTxCount[_serviceNode]] = _tx;
+		addressTx[_dataValidator][addressTxCount[_dataValidator]] = _tx;
+
+		emit TxTransfer(
+			_hash,
+			queueNumber,
+			_serviceNode,
+			_dataValidator,
 			_value,
 			now
 		);

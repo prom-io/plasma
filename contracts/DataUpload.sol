@@ -4,6 +4,8 @@ import "./AbstractTransaction.sol";
 import "./AbstractWallet.sol";
 import "./AbstractDataUpload.sol";
 import "./AbstractAccountManage.sol";
+import "./lib/signValidator.sol";
+
 
 contract DataUpload is AbstractDataUpload {
 
@@ -63,8 +65,12 @@ contract DataUpload is AbstractDataUpload {
 		address _serviceNodeAddress,
 		address _dataOwner,
 		uint _buySum,
-		uint _sum
+		uint _sum,
+		bytes memory _sig,
+		bytes32 _message
 	) public {
+		address signer = ECDSA.recover(_message, _sig);
+		require(signer == _owner, 'Signer address is not valid');
 		require (_sum > 0, "Sum less zero");
 		require (_buySum > 0, "Sum less zero");
 		require (accountManage.isDataOwner(_dataOwner) == true, "Invalid address: Is not Data Owner");
@@ -74,6 +80,7 @@ contract DataUpload is AbstractDataUpload {
 		fileCount += 1;
 		wallet.balanceReplenishment(_serviceNodeAddress, _sum);
 		wallet.balanceConsumption(_owner, _sum);
+
 		uploadedData[_id] = UploadedData(
 			_id, 
 			_sum,
@@ -81,6 +88,27 @@ contract DataUpload is AbstractDataUpload {
 			_serviceNodeAddress, 
 			_dataOwner
 		);
+
+		this.uploadFile(_id, _name, _size, _file_extension, _mime_type, _meta_data, _owner);
+
+		emit DataUploaded(
+			_id, 
+			_serviceNodeAddress, 
+			_dataOwner, 
+			_sum
+		);
+	}
+
+	function uploadFile (
+		string memory _id,
+		string memory _name,
+		uint256 _size,
+		string memory _file_extension,
+		string memory _mime_type,
+		string memory _meta_data,
+		address _owner
+	) public {
+
 		File memory _file = File(
 			_id, 
 			_name, 
@@ -96,13 +124,6 @@ contract DataUpload is AbstractDataUpload {
 
 		fileUploadedCount[_owner] += 1;
 		fileUploaded[_owner][fileUploadedCount[_owner]] = _file;
-
-		emit DataUploaded(
-			_id, 
-			_serviceNodeAddress, 
-			_dataOwner, 
-			_sum
-		);
 	}
 	
 	function checkFileOwner(address _owner, string memory _id) public view returns(bool) {

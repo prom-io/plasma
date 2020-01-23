@@ -4,6 +4,8 @@ import "./AbstractWallet.sol";
 import "./AbstractDataSell.sol";
 import "./AbstractDataUpload.sol";
 import "./AbstractAccountManage.sol";
+import "./lib/signValidator.sol";
+
 
 contract DataSell is AbstractDataSell {
 
@@ -50,8 +52,12 @@ contract DataSell is AbstractDataSell {
 		address _dataValidator, 
 		address _serviceNode, 
 		address _dataOwner,
-		uint256 _sum
+		uint256 _sum,
+		bytes memory _sig,
+		bytes32 _message
 	) public sumMoreZero(_sum) {
+		address signer = ECDSA.recover(_message, _sig);
+		require(signer == _dataMart, 'Signer address is not valid');
 		require(dataUpload.checkFileExist(_dataValidator, _fileId));
 		require(accountManage.isDataMart(_dataMart));
 		require(accountManage.isDataValidator(_dataValidator));
