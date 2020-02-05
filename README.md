@@ -13,7 +13,9 @@ Plasma - tree-like structure of numerous chains (able to handle more transaction
 ## How it works
 
 Use of Plasma allows users to save all transactions and display data about them immediately after transactions, without waiting for confirmation of the Ethereum network. If transaction is not confirmed, then the plasma repeats it until success is achieved.
+
 For the relevance of plasma data, transactions will be synchronized with the main network of Ethereum every hour. All the transactions received after synchronization will be collected in one transaction, thereby saving gas.
+
 The service is an integral part of Billing and is automatically set during standard service node deploymet procedure.
 
 ## License
