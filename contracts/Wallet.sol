@@ -1,11 +1,14 @@
 pragma solidity ^0.5.0;
 
 import "./AbstractWallet.sol";
+import "./lib/signValidator.sol";
 
 contract Wallet is AbstractWallet {
 
 	address owner;
+
 	mapping (address => bool) public isWhiteListed;
+	mapping(uint256 => bool) usedNonces;
 
 	constructor() public {
 		owner = msg.sender;
@@ -38,6 +41,14 @@ contract Wallet is AbstractWallet {
 		address dataValidator,
 		address serviceNode,
 		uint256 sum
+	);
+
+	event TransferTo(
+		address from,
+		address to,
+		uint256 sum,
+		bytes sig,
+		bytes32 message
 	);
 	
 	modifier checkSum(uint256 _sum) { 
@@ -87,6 +98,22 @@ contract Wallet is AbstractWallet {
 		emit ExtendFileStore(_dataValidator, _serviceNode, _sum);
 	}
 
+	function transferTo(address _from, address _to, uint256 _sum, bytes memory _sig, bytes32 _message) public checkSum(_sum) {
+		address signer = ECDSA.recover(_message, _sig);
+		require(signer == _from, 'Signer address is not valid');
+		require(checkExists(_to), 'Reciever address is not registered');
+		require(checkExists(_from), 'Address is not registered');
+		Balance memory _fromBalance = wallets[_from];
+		Balance memory _toBalance = wallets[_to];
+		require(_fromBalance.balance > 0, 'Funds in the account are over!');
+		require(_fromBalance.balance >= _sum, 'Not enough funds on the balance sheet');
+		_fromBalance.balance -= _sum;
+		_toBalance.balance += _sum;
+		wallets[_from] = _fromBalance;
+		wallets[_to] = _toBalance;	
+		emit TransferTo(_from, _to, _sum, _sig, _message);
+	}
+
 	function setWhiteList(
 		address _dataSell, 
 		address _dataUpload,
@@ -105,5 +132,4 @@ contract Wallet is AbstractWallet {
 	function balanceOf(address _owner) public view returns (uint256) {
 		return wallets[_owner].balance;
 	}
-	
 }
