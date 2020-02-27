@@ -17,6 +17,7 @@ contract Wallet is AbstractWallet {
 	struct Balance {
 		address owner;
 		uint256 balance;
+		uint256 siaBalance;
 		bool exists;
 	}
 	mapping (address => Balance) public wallets;
@@ -50,6 +51,15 @@ contract Wallet is AbstractWallet {
 		bytes sig,
 		bytes32 message
 	);
+
+	event TokenSwap(
+		address from,
+		address to,
+		uint256 sumEther,
+		uint256 sumSia,
+		bytes sig,
+		bytes32 message
+	);
 	
 	modifier checkSum(uint256 _sum) { 
 		require (_sum > 0); 
@@ -64,7 +74,7 @@ contract Wallet is AbstractWallet {
 	function initWallet(address _owner, uint256 _sum) external checkSender(msg.sender) {
 		Balance memory _wallet = wallets[_owner];
 		require (_wallet.exists == false);
-		wallets[_owner] = Balance(_owner, _sum, true);
+		wallets[_owner] = Balance(_owner, _sum, 0, true);
 		emit BalanceEvent(_owner, _sum, _sum);
 	}
 
@@ -112,6 +122,23 @@ contract Wallet is AbstractWallet {
 		wallets[_from] = _fromBalance;
 		wallets[_to] = _toBalance;	
 		emit TransferTo(_from, _to, _sum, _sig, _message);
+	}
+
+	function swapToken(address _from, address _to, uint256 _sumEther, uint256 _sumSia, bytes memory _sig, bytes32 _message) public checkSum(_sumEther) checkSum(_sumSia) {
+		address signer = ECDSA.recover(_message, _sig);
+		require(signer == _from, 'Signer address is not valid');
+		require(checkExists(_to), 'Reciever address is not registered');
+		require(checkExists(_from), 'Address is not registered');
+		Balance memory _fromBalance = wallets[_from];
+		Balance memory _toBalance = wallets[_to];
+		require(_fromBalance.balance > 0, 'Funds in the account are over!');
+		require(_fromBalance.balance >= _sumEther, 'Not enough funds on the balance sheet');
+		_fromBalance.balance -= _sumEther;
+		_toBalance.balance += _sumEther;
+		_toBalance.siaBalance += _sumSia;
+		wallets[_from] = _fromBalance;
+		wallets[_to] = _toBalance;
+		emit TokenSwap(_from, _to, _sumEther, _sumSia, _sig, _message);
 	}
 
 	function setWhiteList(

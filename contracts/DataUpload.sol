@@ -64,27 +64,26 @@ contract DataUpload is AbstractDataUpload {
 		address _owner,
 		address _serviceNodeAddress,
 		address _dataOwner,
-		uint _buySum,
-		uint _sum,
+		uint _sumEther,
+		uint _sumSia,
 		bytes memory _sig,
 		bytes32 _message
 	) public {
 		address signer = ECDSA.recover(_message, _sig);
 		require(signer == _owner, 'Signer address is not valid');
-		require (_sum > 0, "Sum less zero");
-		require (_buySum > 0, "Sum less zero");
+		require (_sumEther > 0, "Sum less zero");
+		require (_sumSia > 0, "Sum less zero");
 		require (accountManage.isDataOwner(_dataOwner) == true, "Invalid address: Is not Data Owner");
 		require (accountManage.isServiceNode(_serviceNodeAddress) == true, "Invalid address: Is not Service Node");
 		require (accountManage.isDataValidator(_owner) == true, "Invalid address: Is not Data Validator");
 		
 		fileCount += 1;
-		wallet.balanceReplenishment(_serviceNodeAddress, _sum);
-		wallet.balanceConsumption(_owner, _sum);
+		wallet.swapToken(_owner, _serviceNodeAddress, _sumEther, _sumSia, _sig, _message);
 
 		uploadedData[_id] = UploadedData(
 			_id, 
-			_sum,
-			_buySum,
+			_sumEther,
+			_sumSia,
 			_serviceNodeAddress, 
 			_dataOwner
 		);
@@ -95,7 +94,7 @@ contract DataUpload is AbstractDataUpload {
 			_id, 
 			_serviceNodeAddress, 
 			_dataOwner, 
-			_sum
+			_sumEther
 		);
 	}
 
