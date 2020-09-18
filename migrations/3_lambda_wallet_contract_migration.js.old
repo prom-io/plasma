@@ -1,0 +1,9 @@
+const Web3 = require('web3');
+
+const TruffleConfig = require('../truffle-config');
+
+const WalletLambda = artifacts.require("WalletLambda");
+
+module.exports = function(deployer) {
+	deployer.deploy(WalletLambda);
+};

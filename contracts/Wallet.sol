@@ -109,8 +109,8 @@ contract Wallet is AbstractWallet {
 	}
 
 	function transferTo(address _from, address _to, uint256 _sum, bytes memory _sig, bytes32 _message) public checkSum(_sum) {
-		address signer = ECDSA.recover(_message, _sig);
-		require(signer == _from, 'Signer address is not valid');
+		// address signer = ECDSA.recover(_message, _sig);
+		// require(signer == _from, 'Signer address is not valid');
 		require(checkExists(_to), 'Reciever address is not registered');
 		require(checkExists(_from), 'Address is not registered');
 		Balance memory _fromBalance = wallets[_from];
@@ -125,8 +125,8 @@ contract Wallet is AbstractWallet {
 	}
 
 	function swapToken(address _from, address _to, uint256 _sumEther, uint256 _sumSia, bytes memory _sig, bytes32 _message) public checkSum(_sumEther) checkSum(_sumSia) {
-		address signer = ECDSA.recover(_message, _sig);
-		require(signer == _from, 'Signer address is not valid');
+		// address signer = ECDSA.recover(_message, _sig);
+		// require(signer == _from, 'Signer address is not valid');
 		require(checkExists(_to), 'Reciever address is not registered');
 		require(checkExists(_from), 'Address is not registered');
 		Balance memory _fromBalance = wallets[_from];

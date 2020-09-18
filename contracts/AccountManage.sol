@@ -48,17 +48,7 @@ contract AccountManage is AbstractAccountManage {
 	
 
 	function initAccount(address _owner, uint256 _sum) public {
-		bool exists = wallet.checkExists(_owner);
-		if(!exists) {
-			wallet.initWallet(_owner, _sum);
-			accounts[_owner] = Account(_owner, 0, false);
-			emit RegisteredSum(_owner, _sum);
-		}
-
-		if(exists) {
-			wallet.balanceReplenishment(_owner, _sum);
-			emit ChildChainDeposit(_owner, _sum);
-		}
+		accounts[_owner] = Account(_owner, 0, false);
 	}
 
 	function registerDataMart(address _owner) public checkRegistered(_owner) {
@@ -80,26 +70,14 @@ contract AccountManage is AbstractAccountManage {
 	function registerOwner(address _dataValidator, address _dataOwner) public checkRegistered(_dataOwner) {
 		require(isRegistered(_dataValidator) == true);
 		require(isDataValidator(_dataValidator) == true);
-		bool exists = wallet.checkExists(_dataOwner);
-
-		if(!exists) {
-			wallet.initWallet(_dataOwner, 0);
-		}
-
-	 	accounts[_dataOwner] = Account(_dataOwner, DATA_OWNER, true);
+		accounts[_dataOwner] = Account(_dataOwner, DATA_OWNER, true);
 	 	dataOwners[_dataValidator].push(_dataOwner);	
 	 	dataOwnersCount[_dataValidator] = dataOwnersCount[_dataValidator] + 1;
 	 	emit Registered(_dataOwner, DATA_OWNER);
 	}
 
 	function register(address _owner, uint _role) private {
-		bool exists = wallet.checkExists(_owner);
-
-		if(!exists) {
-			wallet.initWallet(_owner, 0);
-		}
-
-	 	accounts[_owner] = Account(_owner, _role, true);		
+		accounts[_owner] = Account(_owner, _role, true);		
 	 	emit Registered(_owner, _role);
 	}
 

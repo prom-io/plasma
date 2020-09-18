@@ -1,0 +1,104 @@
+{
+  "contractName": "AbstractDataSell",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.8+commit.23d335f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/var/www/plasma/contracts/AbstractDataSell.sol\":\"AbstractDataSell\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/var/www/plasma/contracts/AbstractDataSell.sol\":{\"keccak256\":\"0xc2fae2179c72ea0446e56a1d81bb54ae0b843c1b3278da1640f63b9f1a351044\",\"urls\":[\"bzzr://c633b0263246c6bcabb3a4531663dfd36ee96253669740ab1a6396e9653a85bb\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a7230582071c6fc400c07d0f75d799037b9ccd02a460def62e4278e97da677f3d607a91bf0029",
+  "deployedBytecode": "0x6080604052600080fdfea165627a7a7230582071c6fc400c07d0f75d799037b9ccd02a460def62e4278e97da677f3d607a91bf0029",
+  "sourceMap": "25:31:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:31:1;;;;;;;",
+  "deployedSourceMap": "25:31:1:-;;;;;",
+  "source": "pragma solidity ^0.5.0;\n\ncontract AbstractDataSell {\n\t\n}\n",
+  "sourcePath": "/var/www/plasma/contracts/AbstractDataSell.sol",
+  "ast": {
+    "absolutePath": "/var/www/plasma/contracts/AbstractDataSell.sol",
+    "exportedSymbols": {
+      "AbstractDataSell": [
+        33
+      ]
+    },
+    "id": 34,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 32,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:1"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 33,
+        "linearizedBaseContracts": [
+          33
+        ],
+        "name": "AbstractDataSell",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 34,
+        "src": "25:31:1"
+      }
+    ],
+    "src": "0:57:1"
+  },
+  "legacyAST": {
+    "absolutePath": "/var/www/plasma/contracts/AbstractDataSell.sol",
+    "exportedSymbols": {
+      "AbstractDataSell": [
+        33
+      ]
+    },
+    "id": 34,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 32,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:1"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 33,
+        "linearizedBaseContracts": [
+          33
+        ],
+        "name": "AbstractDataSell",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 34,
+        "src": "25:31:1"
+      }
+    ],
+    "src": "0:57:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.8+commit.23d335f2.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.13",
+  "updatedAt": "2020-07-24T09:46:18.980Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

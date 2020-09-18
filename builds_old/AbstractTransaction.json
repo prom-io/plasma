@@ -1,0 +1,104 @@
+{
+  "contractName": "AbstractTransaction",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.8+commit.23d335f2\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/var/www/plasma/contracts/AbstractTransaction.sol\":\"AbstractTransaction\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/var/www/plasma/contracts/AbstractTransaction.sol\":{\"keccak256\":\"0xbde31c3960491825ae25a8b9bb50ba461389246f8432bdc1a5cac0a2237b89ae\",\"urls\":[\"bzzr://13ddc7bff332ee70e90d1b1f70a07af6cade4aa4f229f2834919f88d54dcd660\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a723058205264e835f4c73338ba417c44946442ed3760d3b149d4df409cfbf0debe15c0f90029",
+  "deployedBytecode": "0x6080604052600080fdfea165627a7a723058205264e835f4c73338ba417c44946442ed3760d3b149d4df409cfbf0debe15c0f90029",
+  "sourceMap": "25:32:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:32:3;;;;;;;",
+  "deployedSourceMap": "25:32:3:-;;;;;",
+  "source": "pragma solidity ^0.5.0;\n\ncontract AbstractTransaction {\n}\n",
+  "sourcePath": "/var/www/plasma/contracts/AbstractTransaction.sol",
+  "ast": {
+    "absolutePath": "/var/www/plasma/contracts/AbstractTransaction.sol",
+    "exportedSymbols": {
+      "AbstractTransaction": [
+        48
+      ]
+    },
+    "id": 49,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 47,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:3"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 48,
+        "linearizedBaseContracts": [
+          48
+        ],
+        "name": "AbstractTransaction",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 49,
+        "src": "25:32:3"
+      }
+    ],
+    "src": "0:58:3"
+  },
+  "legacyAST": {
+    "absolutePath": "/var/www/plasma/contracts/AbstractTransaction.sol",
+    "exportedSymbols": {
+      "AbstractTransaction": [
+        48
+      ]
+    },
+    "id": 49,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 47,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:3"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 48,
+        "linearizedBaseContracts": [
+          48
+        ],
+        "name": "AbstractTransaction",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 49,
+        "src": "25:32:3"
+      }
+    ],
+    "src": "0:58:3"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.8+commit.23d335f2.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.13",
+  "updatedAt": "2020-07-24T09:46:18.982Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

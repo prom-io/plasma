@@ -14,7 +14,7 @@ contract Transaction is AbstractTransaction {
 	mapping (uint256 => Tx) public transactions;
 	mapping (string => Tx) public transactionByHash;
 	mapping (string => TxPayData) public transactionPayDataByHash;
-	mapping (string => mapping(uint256 => Tx)) transactionsByType;
+	mapping (string => mapping(uint256 => Tx)) public transactionsByType;
 	
 	struct Tx {
 		string fileUuid;
@@ -165,6 +165,7 @@ contract Transaction is AbstractTransaction {
 		addressTx[_dataValidator][addressTxCount[_dataValidator]] = _tx;
 		addressTx[_dataMart][addressTxCount[_dataMart]] = _tx;
 		addressTx[_dataOwner][addressTxCount[_dataOwner]] = _tx;
+
 		emit TxDataPurchase(
 			_uuid,
 			_hash,

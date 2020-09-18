@@ -63,12 +63,9 @@ contract DataSell is AbstractDataSell {
 		require(accountManage.isDataValidator(_dataValidator));
 		require(accountManage.isServiceNode(_serviceNode));
 
-		uint256 _amount = _sum / 2;
-
 		selledData[_fileId] = SelledData(_fileId, _dataValidator, _dataMart, _dataOwner, _sum);
-		wallet.balanceReplenishment(_dataValidator, _amount);
-		wallet.balanceReplenishment(_dataOwner, _amount);
-		wallet.balanceConsumption(_dataMart, _sum);
+		wallet.balancePlusByEthereumAddress(_dataValidator, _sum);
+		wallet.balanceMinusByEthereumAddress(_dataMart, _sum);
 		emit SelledDataEvent(_fileId, _dataValidator, _dataMart, _dataOwner, _sum);
 	}
 

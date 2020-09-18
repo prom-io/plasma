@@ -1,9 +1,34 @@
 pragma solidity ^0.5.0;
 
 contract AbstractWallet {
-	function initWallet(address _owner, uint256 _sum) external;
-	function balanceReplenishment (address _owner, uint _sum) public;	
-	function balanceConsumption(address _owner, uint _sum) public;
-	function checkExists(address _owner) public view returns (bool);
-	function swapToken(address _from, address _to, uint256 _sumEther, uint256 _sumSia, bytes memory _sig, bytes32 _message) public;
+	function deposit(
+		string memory _lambdaAddress, 
+		string memory _txHash,
+		uint256 _amount
+	) public returns (bool);
+	function newWallet (
+		address _ethAddress, 
+		string memory _lambdaAddress
+	) public returns(bool res);
+	function balancePlusByEthereumAddress (
+		address _ethAddress,
+		uint256 _amount
+	) public returns(bool);
+	function balanceMinusByEthereumAddress (
+		address _ethAddress,
+		uint256 _amount
+	) public returns(bool);
+	function balancePlus (
+		address _ethAddress,
+		string memory _lambdaAddress,
+		uint256 _amount
+	) public returns(bool);
+	function balanceMinus (
+		address _ethAddress,
+		string memory _lambdaAddress,
+		uint256 _amount
+	) public returns(bool);
+	function addValidator (address _validator) public returns(bool res);
+	function removeValidator (address _validator) public returns(bool res);
+	function balanceOf(string memory _lambdaAddress) public view returns (uint256);
 }

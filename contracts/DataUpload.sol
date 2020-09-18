@@ -36,7 +36,6 @@ contract DataUpload is AbstractDataUpload {
 	struct UploadedData {
 		string  id;
 		uint256 sum;
-		uint256 buySum;
 		address serviceNodeAddress;
 		address dataOwner;
 	}
@@ -45,7 +44,7 @@ contract DataUpload is AbstractDataUpload {
 		string id,
 		address serviceNodeAddress,
 		address dataOwner,
-		uint sum
+		uint256 sum
 	);
 
 	constructor(address _transaction, address _wallet, address _accountManage) public {
@@ -64,38 +63,26 @@ contract DataUpload is AbstractDataUpload {
 		address _owner,
 		address _serviceNodeAddress,
 		address _dataOwner,
-		uint _sumEther,
-		uint _sumSia,
+		uint256 _amount,
 		bytes memory _sig,
 		bytes32 _message
 	) public {
 		address signer = ECDSA.recover(_message, _sig);
 		require(signer == _owner, 'Signer address is not valid');
-		require (_sumEther > 0, "Sum less zero");
-		require (_sumSia > 0, "Sum less zero");
 		require (accountManage.isDataOwner(_dataOwner) == true, "Invalid address: Is not Data Owner");
 		require (accountManage.isServiceNode(_serviceNodeAddress) == true, "Invalid address: Is not Service Node");
 		require (accountManage.isDataValidator(_owner) == true, "Invalid address: Is not Data Validator");
 		
 		fileCount += 1;
-		wallet.swapToken(_owner, _serviceNodeAddress, _sumEther, _sumSia, _sig, _message);
-
-		uploadedData[_id] = UploadedData(
-			_id, 
-			_sumEther,
-			_sumSia,
-			_serviceNodeAddress, 
-			_dataOwner
-		);
-
-		this.uploadFile(_id, _name, _size, _file_extension, _mime_type, _meta_data, _owner);
-
-		emit DataUploaded(
-			_id, 
-			_serviceNodeAddress, 
-			_dataOwner, 
-			_sumEther
-		);
+		uint256 amount = _amount / 2;
+		wallet.balancePlusByEthereumAddress(_serviceNodeAddress, amount);
+		wallet.balanceMinusByEthereumAddress(_owner, amount);
+		fileList[fileCount] = File(_id, _name, _size, _file_extension, _mime_type, _meta_data, _owner, true);
+		files[_owner][_id] = File(_id, _name, _size, _file_extension, _mime_type, _meta_data, _owner, true);
+		fileUploadedCount[_owner] += 1;
+		fileUploaded[_owner][fileUploadedCount[_owner]] = File(_id, _name, _size, _file_extension, _mime_type, _meta_data, _owner, true);
+		uploadedData[_id] = UploadedData(_id, amount, _serviceNodeAddress, _dataOwner);
+		emit DataUploaded(_id, _serviceNodeAddress, _dataOwner, amount);
 	}
 
 	function uploadFile (
